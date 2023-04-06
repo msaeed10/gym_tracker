@@ -1,11 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { Pressable, StyleSheet, Text, View} from 'react-native';
 
 const AddRegion = () => {
-
+    const [isModalOpen, useIsModalOpen] = useState(false);
     return (
         <View style={styles.add_container}>
-            <Pressable style={styles.add_button}><Text>Click Here</Text></Pressable>
+            <Pressable 
+                onPress={() => useIsModalOpen(!isModalOpen)}
+                style={styles.add_button}>
+                    <Text>Click Here</Text>
+            </Pressable>
         </View>
     )
 }

@@ -4,11 +4,17 @@ import RegionList from "./RegionList"
 
 const Regions = () => {
     return (
-        <View>
+        <View style={styles.container}>
             <RegionList />
             <AddRegion />
         </View>
     )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        height: '100%'
+    }
+})
 
 export default Regions;

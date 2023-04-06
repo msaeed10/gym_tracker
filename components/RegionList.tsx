@@ -1,10 +1,22 @@
-import { View, ScrollView, Text, StyleSheet, Pressable } from 'react-native';
+import { useState } from 'react';
+import { View, ScrollView, Text, StyleSheet, Pressable, GestureResponderEvent } from 'react-native';
 
 const RegionList = () => {
-    const regions = [{
+    const [regions, useRegions] = useState([{
         location: "this is the location",
         meters: 200
-    }, {}, {}, {}, {}, {}, {}];
+    }, {}, {}, {}, {}, {}, {}]);
+
+    const removeRegion = (regionId: number) => {
+        let updatedRegions = regions.filter((item, index) => index !== regionId)
+        // TODO: update api call when backend is complete
+        useRegions(updatedRegions);
+    }
+
+    const editRegion = (region: { location: string; meters: number; } | { location?: undefined; meters?: undefined; }) => {
+        console.log(region)
+        // TODO: update api call when backend is complete
+    }
 
     const generatCards = () => {
         return regions.map((item, index) => {
@@ -16,10 +28,10 @@ const RegionList = () => {
                     </View>
                     <View style={styles.action}>
                         <Pressable 
-                            onPress={() => {}}
+                            onPress={() => editRegion(regions[index])}
                             style={[styles.button, styles.edit]}><Text>Edit</Text></Pressable>
                         <Pressable 
-                            onPress={() => {}} 
+                            onPress={() => {removeRegion(index)}} 
                             style={[styles.button, styles.delete]}><Text>Delete</Text></Pressable> 
                     </View>
                 </View>
