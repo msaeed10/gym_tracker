@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, ScrollView, Text, StyleSheet, Pressable, GestureResponderEvent } from 'react-native';
+import { View, ScrollView, Text, StyleSheet, Pressable } from 'react-native';
 
 const RegionList = () => {
     const [regions, useRegions] = useState([{
@@ -79,13 +79,19 @@ const styles = StyleSheet.create({
         alignItems: 'flex-end'
     },
     button: {
-        backgroundColor: '#FF2D00',
         width: 60,
         height: 30,
         margin: 10,
         justifyContent: 'center',
         alignItems: 'center',
-        borderRadius: 5
+        borderRadius: 5,
+        borderWidth: 0.2,
+        borderColor: '#000',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 2,
+        elevation: 2
     },
     edit: {
         backgroundColor: '#8ED3E4'

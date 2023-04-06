@@ -6,17 +6,12 @@
  */
 
 import React from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  Dimensions,
-  View
-} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
+import { StyleSheet } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
-import Regions from './components/Regions';
-import CalendarTracker from './components/CalendarTracker';
+import Regions from './components/region/Regions';
+import CalendarTracker from './components/calendar/CalendarTracker';
 
 const Tab = createMaterialTopTabNavigator();
 function App(): JSX.Element {

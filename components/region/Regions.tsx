@@ -1,12 +1,13 @@
-import { Dimensions, StyleSheet, View } from "react-native"
-import AddRegion from "./AddRegion"
+import { StyleSheet, View } from "react-native"
+import AddRegionButton from "./AddRegionButton"
 import RegionList from "./RegionList"
-
+import AddRegionForm from "./AddRegionForm"
 const Regions = () => {
     return (
         <View style={styles.container}>
-            <RegionList />
-            <AddRegion />
+            {/* <RegionList />
+            <AddRegionButton /> */}
+            <AddRegionForm />
         </View>
     )
 }
