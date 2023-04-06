@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Agenda } from "react-native-calendars";
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
 const CalendarTracker = () => {
     const [datesGone, setDatesGone] = useState({'2023-03-25': {marked: true, dotColor: 'green'}});
@@ -41,22 +41,17 @@ const CalendarTracker = () => {
 
                 // Specify how each item should be rendered in agenda
                 renderItem={() => {
-                    return <View />;
+                    return <View><Text>Render Item</Text></View>;
                 }}
 
                 // Specify how each date should be rendered. day can be undefined if the item is not first in that day
                 renderDay={() => {
-                    return <View />;
+                    return <View><Text>Render Day</Text></View>;
                 }}
 
                 // Specify how empty date content with no items should be rendered
                 renderEmptyDate={() => {
-                    return <View />;
-                }}
-
-                // Specify how agenda knob should look like
-                renderKnob={() => {
-                    return <View />;
+                    return <View><Text>Render Empty</Text></View>;
                 }}
             />
         </View>

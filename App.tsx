@@ -13,21 +13,21 @@ import {
   View
 } from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
 import Regions from './components/Regions';
 import CalendarTracker from './components/CalendarTracker';
 
-const Stack = createNativeStackNavigator();
+const Tab = createMaterialTopTabNavigator();
 function App(): JSX.Element {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
+      <Tab.Navigator style={styles.container}>
+        <Tab.Screen
           name="Calendar"
           component={CalendarTracker}/>
-        <Stack.Screen name="Regions" component={Regions} />
-      </Stack.Navigator>
+        <Tab.Screen name="Regions" component={Regions} />
+      </Tab.Navigator>
     </NavigationContainer>
   );
 }
@@ -35,7 +35,7 @@ function App(): JSX.Element {
 const styles = StyleSheet.create({
   container: {
     padding: 0,
-    margin: 0
+    marginTop: 25
   },
 });
 

@@ -35,7 +35,7 @@ const RegionList = () => {
 
 const styles = StyleSheet.create({
     card_container: {
-        marginTop: 35,
+        marginTop: 0,
         marginBottom: 0,
         marginLeft: 10,
         marginRight: 10
