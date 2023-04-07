@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import { Pressable, StyleSheet, Text, View} from 'react-native';
 
-const AddRegion = () => {
-    const [isModalOpen, useIsModalOpen] = useState(false);
+interface AddRegionButtonProps {
+    triggerModalOpen: () => void;
+}
+const AddRegionButton:React.FC<AddRegionButtonProps> = ({triggerModalOpen}) => {    
+
     return (
         <View style={styles.add_container}>
             <Pressable 
-                onPress={() => useIsModalOpen(!isModalOpen)}
+                onPress={() => triggerModalOpen()}
                 style={styles.add_button}>
                     <Text>Click Here</Text>
             </Pressable>
@@ -40,4 +43,4 @@ const styles = StyleSheet.create({
         elevation: 2
     }
 })
-export default AddRegion;
+export default AddRegionButton;

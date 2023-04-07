@@ -1,15 +1,42 @@
 import React, { useState } from "react";
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Region } from "../../model/Region";
 
+interface AddRegionFormProps {
+    triggerModalOpen: () => void;
+    handleSaveRegion: (region: Region) => void;
+    regionToEdit: Region | undefined;
+}
 
 // Pass in props for reusablility on an edit event
-const AddRegionForm = () => {
-    const [address, onAddress] = useState("");
-    const [city, onCity] = useState("");
-    const [state, onState] = useState("");
-    const [zip, onZipCode] = useState("");
-    const [meters, onMeters] = useState("");
+const AddRegionForm:React.FC<AddRegionFormProps> = ({triggerModalOpen, handleSaveRegion, regionToEdit}) => {
+    const [address, onAddress] = useState(regionToEdit?.address);
+    const [city, onCity] = useState(regionToEdit?.city);
+    const [state, onState] = useState(regionToEdit?.state);
+    const [zip, onZipCode] = useState(regionToEdit?.zipCode);
+    const [meters, onMeters] = useState(regionToEdit?.meters);
+
+    const createRegionObjectFromState = () => {
+        return {
+            id: regionToEdit?.id,
+            address: address,
+            city: city,
+            state: state,
+            zipCode: zip,
+            meters: meters
+        };
+    }
+    
+    const handleSave = () => {
+        // handle input validation (all fields are mandatory)
+
+        // send api call to google maps to validate address exists
+
+        // close modal
+        handleSaveRegion(createRegionObjectFromState())
+        triggerModalOpen()
+    }
 
     return(
         <ScrollView contentContainerStyle={styles.modal_container}>
@@ -20,7 +47,6 @@ const AddRegionForm = () => {
                         onChangeText={onAddress}
                         value={address}
                         placeholder="Location"
-                        keyboardType="numeric"
                     />
                     <View style={styles.regional_information}>
                     <TextInput
@@ -28,21 +54,18 @@ const AddRegionForm = () => {
                         onChangeText={onCity}
                         value={city}
                         placeholder="City"
-                        keyboardType="numeric"
                     />
                     <TextInput
                         style={[styles.state, styles.input]}
                         onChangeText={onState}
                         value={state}
                         placeholder="State"
-                        keyboardType="numeric"
                     />
                     <TextInput
                         style={[styles.zip, styles.input]}
                         onChangeText={onZipCode}
                         value={zip}
                         placeholder="Zip Code"
-                        keyboardType="numeric"
                     />
                     </View>
                     <TextInput
@@ -50,18 +73,17 @@ const AddRegionForm = () => {
                         onChangeText={onMeters}
                         value={meters}
                         placeholder="Meters"
-                        keyboardType="numeric"
                     />
                 </View>
                 <View style={styles.action}>
                     <Pressable
                         style={styles.button}
-                        onPress={() => {}}>
+                        onPress={handleSave}>
                             <Text>Save</Text>
                     </Pressable>
                     <Pressable
                         style={styles.button}
-                        onPress={() => {}}>
+                        onPress={triggerModalOpen}>
                             <Text>Cancel</Text>
                     </Pressable>
                 </View>
@@ -90,7 +112,7 @@ const styles = StyleSheet.create({
         elevation: 2
     },
     input_container: {
-        height: 100,
+        height: 150,
     },
     input: {
         height: 30,
@@ -127,7 +149,6 @@ const styles = StyleSheet.create({
     },
     action: {
         margin: 0,
-        height: 100,
         flexDirection: 'row',
         justifyContent: 'flex-end',
         alignItems: "flex-end",

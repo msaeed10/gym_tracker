@@ -1,37 +1,27 @@
-import { useState } from 'react';
 import { View, ScrollView, Text, StyleSheet, Pressable } from 'react-native';
+import { Region } from '../../model/Region';
 
-const RegionList = () => {
-    const [regions, useRegions] = useState([{
-        location: "this is the location",
-        meters: 200
-    }, {}, {}, {}, {}, {}, {}]);
+interface RegionListProps {
+    regions: Array<Region>
+    handleEditRegion: (region: Region) => void;
+    handleRemoveRegion: (regionId: number) => void;
+}
 
-    const removeRegion = (regionId: number) => {
-        let updatedRegions = regions.filter((item, index) => index !== regionId)
-        // TODO: update api call when backend is complete
-        useRegions(updatedRegions);
-    }
-
-    const editRegion = (region: { location: string; meters: number; } | { location?: undefined; meters?: undefined; }) => {
-        console.log(region)
-        // TODO: update api call when backend is complete
-    }
-
+const RegionList:React.FC<RegionListProps> = ({regions, handleEditRegion, handleRemoveRegion}) => {
     const generatCards = () => {
         return regions.map((item, index) => {
             return (
                 <View key={index} style={styles.card}>
                     <View style={styles.content}>
-                        <Text style={styles.content_text}>{item.location}</Text>
+                        <Text style={styles.content_text}>{item.address}, {item.city}, {item.state}, {item.zipCode}</Text>
                         <Text style={styles.content_text}>meters: {item.meters}</Text>
                     </View>
                     <View style={styles.action}>
                         <Pressable 
-                            onPress={() => editRegion(regions[index])}
+                            onPress={() => handleEditRegion(regions[index])}
                             style={[styles.button, styles.edit]}><Text>Edit</Text></Pressable>
                         <Pressable 
-                            onPress={() => {removeRegion(index)}} 
+                            onPress={() => {handleRemoveRegion(index)}} 
                             style={[styles.button, styles.delete]}><Text>Delete</Text></Pressable> 
                     </View>
                 </View>
