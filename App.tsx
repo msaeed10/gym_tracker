@@ -6,29 +6,31 @@
  */
 
 import React from 'react';
-import {
-  StyleSheet,
-  View,
-} from 'react-native';
+import { StyleSheet } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
-import CalendarTracker from './components/CalendarTracker';
+import Regions from './components/region/Regions';
+import CalendarTracker from './components/calendar/CalendarTracker';
 
+const Tab = createMaterialTopTabNavigator();
 function App(): JSX.Element {
   return (
-    <View style={styles.container}>
-      <CalendarTracker />   
-    </View>
+    <NavigationContainer>
+      <Tab.Navigator style={styles.container}>
+        <Tab.Screen
+          name="Calendar"
+          component={CalendarTracker}/>
+        <Tab.Screen name="Regions" component={Regions} />
+      </Tab.Navigator>
+    </NavigationContainer>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     padding: 0,
-    margin: 0,
-    height: '100%',
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
+    marginTop: 25
   },
 });
 

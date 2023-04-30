@@ -1,7 +1,8 @@
 const isWithinRegion = (point: { latitude: number; longitude: number; }) => {
     let j = 0;
     //TODO: make api call to get geofences made
-    let geofence = {};
+    let geofence = JSON.parse(require('../../data/regions.json'));
+
     let edges = geofence.geofence_edges;
     let numSides = geofence.geofence_edges.length;
     let oddNodes = false;
