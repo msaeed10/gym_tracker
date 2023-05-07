@@ -4,17 +4,14 @@ import RegionList from "./RegionList"
 import AddRegionForm from "./AddRegionForm"
 import { useState } from "react"
 import { Region } from "../../model/Region"
+import { writeRegion, getRegions, deleteRegion } from "../../db/DatabaseHandlers";
 
+deleteRegion();
+writeRegion();
+getRegions();
 const Regions = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [regions, setRegions] = useState<Array<Region>>([{
-        id: 1,
-        address: "this is the location",
-        city: "city",
-        state: "state",
-        zipCode: "504324",
-        meters: "200"
-    }]);
+    const [regions, setRegions] = useState<Array<Region>>([]);
     const [regionToEdit, setRegionToEdit] = useState<Region>();
 
     const getRandomNumber = () => {
@@ -25,7 +22,7 @@ const Regions = () => {
     const handleSaveRegion = (region: Region) => {
         if(region.id == undefined) {
             region.id = getRandomNumber();
-            setRegions([...regions, region])
+            setRegions([...regions, region]);
         } else {
             let regionIndex = regions.findIndex((item) => item.id === region.id);
             let updatedRegions = regions;
