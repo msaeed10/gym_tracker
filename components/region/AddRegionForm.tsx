@@ -1,25 +1,25 @@
-import React, { useState } from "react";
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { Region } from "../../model/Region";
+import React, { useState } from 'react';
+import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Region } from "../../db/RegionDatabase";
+import { RegionModel } from '../../model/RegionModel';
 
 interface AddRegionFormProps {
     triggerModalOpen: () => void;
-    handleSaveRegion: (region: Region) => void;
-    regionToEdit: Region | undefined;
+    handleSaveRegion: (region: RegionModel) => void;
 }
 
 // Pass in props for reusablility on an edit event
-const AddRegionForm:React.FC<AddRegionFormProps> = ({triggerModalOpen, handleSaveRegion, regionToEdit}) => {
-    const [address, onAddress] = useState(regionToEdit?.address);
-    const [city, onCity] = useState(regionToEdit?.city);
-    const [state, onState] = useState(regionToEdit?.state);
-    const [zip, onZipCode] = useState(regionToEdit?.zipCode);
-    const [meters, onMeters] = useState(regionToEdit?.meters);
+const AddRegionForm:React.FC<AddRegionFormProps> = ({triggerModalOpen, handleSaveRegion}) => {
+    const [address, onAddress] = useState("");
+    const [city, onCity] = useState("");
+    const [state, onState] = useState("");
+    const [zip, onZipCode] = useState("");
+    const [meters, onMeters] = useState("");
 
     const createRegionObjectFromState = () => {
         return {
-            id: regionToEdit?.id,
+            id: undefined,
             address: address,
             city: city,
             state: state,

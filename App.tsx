@@ -12,18 +12,23 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 
 import Regions from './components/region/Regions';
 import CalendarTracker from './components/calendar/CalendarTracker';
+import RealmContext from "./db/RegionDatabase";
+
+const { RealmProvider } = RealmContext;
 
 const Tab = createMaterialTopTabNavigator();
 function App(): JSX.Element {
   return (
-    <NavigationContainer>
-      <Tab.Navigator style={styles.container}>
-        <Tab.Screen
-          name="Calendar"
-          component={CalendarTracker}/>
-        <Tab.Screen name="Regions" component={Regions} />
-      </Tab.Navigator>
-    </NavigationContainer>
+    <RealmProvider>
+      <NavigationContainer>
+        <Tab.Navigator style={styles.container}>
+          <Tab.Screen
+            name="Calendar"
+            component={CalendarTracker}/>
+            <Tab.Screen name="Regions" component={Regions} />
+        </Tab.Navigator>
+      </NavigationContainer>
+    </RealmProvider>
   );
 }
 

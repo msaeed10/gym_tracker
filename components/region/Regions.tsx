@@ -3,48 +3,40 @@ import AddRegionButton from "./AddRegionButton"
 import RegionList from "./RegionList"
 import AddRegionForm from "./AddRegionForm"
 import { useState } from "react"
-import { Region } from "../../model/Region"
-import { writeRegion, getRegions, deleteRegion } from "../../db/DatabaseHandlers";
+import { RegionModel } from "../../model/RegionModel"
+import { deleteRegion, updateRegion, saveRegion, getRegions } from "../../db/RegionDatabaseHandler"
+import { Region } from "../../db/RegionDatabase"
 
-deleteRegion();
-writeRegion();
-getRegions();
+
 const Regions = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [regions, setRegions] = useState<Array<Region>>([]);
-    const [regionToEdit, setRegionToEdit] = useState<Region>();
+    const [regions, setRegions] = useState<ReadonlyArray<any>>(getRegions("testUser"));
 
-    const getRandomNumber = () => {
-        const randomNumber = Math.floor(Math.random() * 10000) + 1;
-        return randomNumber;
+    const handleSaveRegion = (region: RegionModel) => {
+        saveRegion(region);
+        // if(region.id == undefined) {
+        //     region.id = getRandomNumber();
+        //     setRegions([...regions, region]);
+        // } else {
+        //     let regionIndex = regions.findIndex((item) => item.id === region.id);
+        //     let updatedRegions = regions;
+        //     updatedRegions[regionIndex] = region;
+        //     setRegions(updatedRegions)
+        // }
     }
 
-    const handleSaveRegion = (region: Region) => {
-        if(region.id == undefined) {
-            region.id = getRandomNumber();
-            setRegions([...regions, region]);
-        } else {
-            let regionIndex = regions.findIndex((item) => item.id === region.id);
-            let updatedRegions = regions;
-            updatedRegions[regionIndex] = region;
-            setRegions(updatedRegions)
-        }
+    const handleUpdateRegion = (region: Region) => {
+        updateRegion(region);
     }
 
-    const handleEditRegion = (region: Region) => {
-        triggerModalOpen();
-        setRegionToEdit(region);
-    }
-
-    const handleRemoveRegion = (regionId: number) => {
-        let updatedRegions = regions.filter((item, index) => index !== regionId)
-        // TODO: update api call when backend is complete
+    const handleRemoveRegion = (regionId: string) => {
+        let updatedRegions = regions.filter((item) => item._id !== regionId)
         setRegions(updatedRegions);
+        deleteRegion(regionId);
     }
 
     const triggerModalOpen = () => {
         setIsModalOpen(!isModalOpen);
-        setRegionToEdit(undefined);
     } 
 
     return (
@@ -54,17 +46,16 @@ const Regions = () => {
                 <AddRegionForm 
                     handleSaveRegion={handleSaveRegion}
                     triggerModalOpen={triggerModalOpen} 
-                    regionToEdit={regionToEdit} 
                 /> 
                 :
                 <>
                     <RegionList 
                         regions={regions} 
                         handleRemoveRegion={handleRemoveRegion} 
-                        handleEditRegion={handleEditRegion} />
+                    />
                     
                     <AddRegionButton triggerModalOpen={triggerModalOpen} />
-                </>
+                </> 
             }
         </View>
     )

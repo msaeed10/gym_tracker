@@ -1,5 +1,5 @@
-export type Region = {
-    id: number | undefined;
+export type RegionModel = {
+    id: Realm.BSON.ObjectId | undefined;
     address: string | undefined; 
     city: string | undefined;
     state: string | undefined;

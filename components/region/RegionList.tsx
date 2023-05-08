@@ -1,13 +1,12 @@
 import { View, ScrollView, Text, StyleSheet, Pressable } from 'react-native';
-import { Region } from '../../model/Region';
+import { Region } from '../../db/RegionDatabase';
 
 interface RegionListProps {
-    regions: Array<Region>
-    handleEditRegion: (region: Region) => void;
-    handleRemoveRegion: (regionId: number) => void;
+    regions: ReadonlyArray<any>;
+    handleRemoveRegion: (regionId: string) => void;
 }
 
-const RegionList:React.FC<RegionListProps> = ({regions, handleEditRegion, handleRemoveRegion}) => {
+const RegionList:React.FC<RegionListProps> = ({regions, handleRemoveRegion}) => {
     const generatCards = () => {
         return regions.map((item, index) => {
             return (
@@ -18,10 +17,10 @@ const RegionList:React.FC<RegionListProps> = ({regions, handleEditRegion, handle
                     </View>
                     <View style={styles.action}>
                         <Pressable 
-                            onPress={() => handleEditRegion(regions[index])}
+                            onPress={() => {}}
                             style={[styles.button, styles.edit]}><Text>Edit</Text></Pressable>
                         <Pressable 
-                            onPress={() => {handleRemoveRegion(index)}} 
+                            onPress={() => {handleRemoveRegion(item._id)}} 
                             style={[styles.button, styles.delete]}><Text>Delete</Text></Pressable> 
                     </View>
                 </View>
