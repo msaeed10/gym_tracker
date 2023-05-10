@@ -1,38 +1,49 @@
 import { StyleSheet, View } from "react-native"
-import AddRegionButton from "./AddRegionButton"
-import RegionList from "./RegionList"
-import AddRegionForm from "./AddRegionForm"
-import { useState } from "react"
+import { useState } from 'react'
+import "react-native-get-random-values";
+import AddRegionButton from './AddRegionButton'
+import RegionList from './RegionList'
+import AddRegionForm from './AddRegionForm'
 import { RegionModel } from "../../model/RegionModel"
-import { deleteRegion, updateRegion, saveRegion, getRegions } from "../../db/RegionDatabaseHandler"
-import { Region } from "../../db/RegionDatabase"
+import RealmContext, { Region } from "../../db/RegionDatabase"
 
+const { useQuery, useRealm } = RealmContext;
 
 const Regions = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [regions, setRegions] = useState<ReadonlyArray<any>>(getRegions("testUser"));
+    const regions = useQuery(Region).filtered("user == $0", "testUser");
+    const realm = useRealm();
 
     const handleSaveRegion = (region: RegionModel) => {
-        saveRegion(region);
-        // if(region.id == undefined) {
-        //     region.id = getRandomNumber();
-        //     setRegions([...regions, region]);
-        // } else {
-        //     let regionIndex = regions.findIndex((item) => item.id === region.id);
-        //     let updatedRegions = regions;
-        //     updatedRegions[regionIndex] = region;
-        //     setRegions(updatedRegions)
-        // }
+        realm.write(() => {
+            realm.create('Region', {
+                _id: new Realm.BSON.ObjectId().toHexString(),
+                address: region.address,
+                city: region.city,
+                state: region.state,
+                zipCode: region.zipCode,
+                meters: region.meters,
+                user: "testUser"
+            });
+        });
     }
 
     const handleUpdateRegion = (region: Region) => {
-        updateRegion(region);
+        realm.write(() => {
+            region.address;
+            region.city;
+            region.state;
+            region.zipCode;
+            region.meters;
+        });
     }
 
     const handleRemoveRegion = (regionId: string) => {
-        let updatedRegions = regions.filter((item) => item._id !== regionId)
-        setRegions(updatedRegions);
-        deleteRegion(regionId);
+        let existingRegion = realm.objects("Region").filtered('_id == $0', regionId)[0];
+
+        realm.write(() => {
+            realm.delete(existingRegion);
+        });
     }
 
     const triggerModalOpen = () => {
