@@ -4,9 +4,10 @@ import { Region } from '../../db/RegionDatabase';
 interface RegionListProps {
     regions: ReadonlyArray<any>;
     handleRemoveRegion: (regionId: string) => void;
+    handleUpdateRegion: (region? : Region) => void;
 }
 
-const RegionList:React.FC<RegionListProps> = ({regions, handleRemoveRegion}) => {
+const RegionList:React.FC<RegionListProps> = ({regions, handleUpdateRegion, handleRemoveRegion}) => {
     const generatCards = () => {
         return regions.map((item, index) => {
             return (
@@ -17,7 +18,7 @@ const RegionList:React.FC<RegionListProps> = ({regions, handleRemoveRegion}) => 
                     </View>
                     <View style={styles.action}>
                         <Pressable 
-                            onPress={() => {}}
+                            onPress={() => {handleUpdateRegion(item)}}
                             style={[styles.button, styles.edit]}><Text>Edit</Text></Pressable>
                         <Pressable 
                             onPress={() => {handleRemoveRegion(item._id)}} 

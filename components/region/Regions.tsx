@@ -11,10 +11,24 @@ const { useQuery, useRealm } = RealmContext;
 
 const Regions = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [regionToEdit, setRegionToEdit] = useState<Region>();
     const regions = useQuery(Region).filtered("user == $0", "testUser");
     const realm = useRealm();
 
     const handleSaveRegion = (region: RegionModel) => {
+        // make api call to google to verify address
+
+        // if not valid dont save and drop down notifying user
+        
+        // if valid continue
+        if(region.id == undefined) {
+            saveRegion(region);
+        } else {
+            updateRegion(region);
+        }
+    }
+
+    const saveRegion = (region: RegionModel) => {
         realm.write(() => {
             realm.create('Region', {
                 _id: new Realm.BSON.ObjectId().toHexString(),
@@ -28,25 +42,28 @@ const Regions = () => {
         });
     }
 
-    const handleUpdateRegion = (region: Region) => {
+    const updateRegion = (region: RegionModel) => {
+        let existingRegion = regions.filtered("_id == $0", region.id)[0];
+
         realm.write(() => {
-            region.address;
-            region.city;
-            region.state;
-            region.zipCode;
-            region.meters;
+            existingRegion.address = region.address;
+            existingRegion.city = region.city;
+            existingRegion.state = region.state;
+            existingRegion.zipCode = region.zipCode;
+            existingRegion.meters = region.meters;
         });
     }
 
     const handleRemoveRegion = (regionId: string) => {
-        let existingRegion = realm.objects("Region").filtered('_id == $0', regionId)[0];
+        let region = regions.filtered('_id == $0', regionId)[0];
 
         realm.write(() => {
-            realm.delete(existingRegion);
+            realm.delete(region);
         });
     }
 
-    const triggerModalOpen = () => {
+    const triggerModalOpen = (region?: Region) => {
+        setRegionToEdit(region);
         setIsModalOpen(!isModalOpen);
     } 
 
@@ -57,12 +74,14 @@ const Regions = () => {
                 <AddRegionForm 
                     handleSaveRegion={handleSaveRegion}
                     triggerModalOpen={triggerModalOpen} 
+                    region={regionToEdit}
                 /> 
                 :
                 <>
                     <RegionList 
                         regions={regions} 
-                        handleRemoveRegion={handleRemoveRegion} 
+                        handleRemoveRegion={handleRemoveRegion}
+                        handleUpdateRegion={triggerModalOpen}
                     />
                     
                     <AddRegionButton triggerModalOpen={triggerModalOpen} />

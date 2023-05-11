@@ -1,37 +1,36 @@
 import React, { useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Region } from "../../db/RegionDatabase";
 import { RegionModel } from '../../model/RegionModel';
+import { Region } from '../../db/RegionDatabase';
 
 interface AddRegionFormProps {
     triggerModalOpen: () => void;
     handleSaveRegion: (region: RegionModel) => void;
+    region?: Region;
 }
 
 // Pass in props for reusablility on an edit event
-const AddRegionForm:React.FC<AddRegionFormProps> = ({triggerModalOpen, handleSaveRegion}) => {
-    const [address, onAddress] = useState("");
-    const [city, onCity] = useState("");
-    const [state, onState] = useState("");
-    const [zip, onZipCode] = useState("");
-    const [meters, onMeters] = useState("");
+const AddRegionForm:React.FC<AddRegionFormProps> = ({region, triggerModalOpen, handleSaveRegion}) => {
+    const [address, onAddress] = useState(region?.address);
+    const [city, onCity] = useState(region?.city);
+    const [state, onState] = useState(region?.state);
+    const [zip, onZipCode] = useState(region?.zipCode);
+    const [meters, onMeters] = useState(region?.meters);
 
     const createRegionObjectFromState = () => {
         return {
-            id: undefined,
-            address: address,
-            city: city,
-            state: state,
-            zipCode: zip,
-            meters: meters
+            id: region?._id,
+            address: address!,
+            city: city!,
+            state: state!,
+            zipCode: zip!,
+            meters: meters!
         };
     }
     
     const handleSave = () => {
         // handle input validation (all fields are mandatory)
-
-        // send api call to google maps to validate address exists
 
         // close modal
         handleSaveRegion(createRegionObjectFromState())

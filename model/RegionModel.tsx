@@ -1,8 +1,8 @@
 export type RegionModel = {
     id: Realm.BSON.ObjectId | undefined;
-    address: string | undefined; 
-    city: string | undefined;
-    state: string | undefined;
-    zipCode: string | undefined;
-    meters: string | undefined;
+    address: string; 
+    city: string;
+    state: string;
+    zipCode: string;
+    meters: string;
 };
