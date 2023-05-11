@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { TextInput } from 'react-native-paper';
 import { RegionModel } from '../../model/RegionModel';
 import { Region } from '../../db/RegionDatabase';
 
@@ -12,6 +12,7 @@ interface AddRegionFormProps {
 
 // Pass in props for reusablility on an edit event
 const AddRegionForm:React.FC<AddRegionFormProps> = ({region, triggerModalOpen, handleSaveRegion}) => {
+    const [showDropDown, setShowDropDown] = useState(false);
     const [address, onAddress] = useState(region?.address);
     const [city, onCity] = useState(region?.city);
     const [state, onState] = useState(region?.state);
@@ -28,7 +29,7 @@ const AddRegionForm:React.FC<AddRegionFormProps> = ({region, triggerModalOpen, h
             meters: meters!
         };
     }
-    
+
     const handleSave = () => {
         // handle input validation (all fields are mandatory)
 
@@ -38,113 +39,98 @@ const AddRegionForm:React.FC<AddRegionFormProps> = ({region, triggerModalOpen, h
     }
 
     return(
-        <ScrollView contentContainerStyle={styles.modal_container}>
-            <SafeAreaView style={styles.modal}>
-                <View style={styles.input_container}>
+        <ScrollView>
+            <View style={styles.input_container}>
+                <TextInput
+                    mode="outlined"
+                    label="Address"
+                    style={styles.address}
+                    value={address}
+                    onChangeText={onAddress}
+                />
+
+                <TextInput
+                    mode="outlined"
+                    label="City"
+                    style={styles.city}
+                    onChangeText={onCity}
+                    value={city}
+                />
+                <View style={styles.regional_information}>
                     <TextInput
-                        style={[styles.address, styles.input]}
-                        onChangeText={onAddress}
-                        value={address}
-                        placeholder="Location"
-                    />
-                    <View style={styles.regional_information}>
-                    <TextInput
-                        style={[styles.city, styles.input]}
-                        onChangeText={onCity}
-                        value={city}
-                        placeholder="City"
-                    />
-                    <TextInput
-                        style={[styles.state, styles.input]}
+                        mode="outlined"
+                        label="State"
                         onChangeText={onState}
+                        style={styles.state}
                         value={state}
-                        placeholder="State"
                     />
                     <TextInput
-                        style={[styles.zip, styles.input]}
+                        mode="outlined"
+                        label="Zip Code"
+                        style={styles.zip}
                         onChangeText={onZipCode}
                         value={zip}
-                        placeholder="Zip Code"
                     />
-                    </View>
+                </View>
+                <View style={styles.meter_container}>
                     <TextInput
-                        style={[styles.meter, styles.input]}
+                        mode="outlined"
+                        label="Meters"
+                        style={styles.meter}
                         onChangeText={onMeters}
                         value={meters}
-                        placeholder="Meters"
                     />
                 </View>
-                <View style={styles.action}>
-                    <Pressable
-                        style={styles.button}
-                        onPress={handleSave}>
-                            <Text>Save</Text>
-                    </Pressable>
-                    <Pressable
-                        style={styles.button}
-                        onPress={triggerModalOpen}>
-                            <Text>Cancel</Text>
-                    </Pressable>
-                </View>
-            </SafeAreaView>
+            </View>
+            <View style={styles.action}>
+                <Pressable
+                    style={styles.button}
+                    onPress={handleSave}>
+                        <Text>Save</Text>
+                </Pressable>
+                <Pressable
+                    style={styles.button}
+                    onPress={triggerModalOpen}>
+                        <Text>Cancel</Text>
+                </Pressable>
+            </View>
         </ScrollView>
     )
 }
 
 const styles = StyleSheet.create({
-    modal_container: {
-        height: '100%',
-        backgroundColor: 'rgba(255, 255, 255, 0.2)',
-        alignItems: 'center',
-    },
-    modal: {
-        top: 20,
-        position: 'absolute',
-        backgroundColor: 'yellow',
-        borderRadius: 15,
-        borderWidth: 0.2,
-        borderColor: '#000',
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.25,
-        shadowRadius: 2,
-        elevation: 2
-    },
     input_container: {
-        height: 150,
-    },
-    input: {
-        height: 30,
-        borderWidth: 0.2,
-        padding: 5,
-        borderRadius: 5,
-    },
-    meter: {
-        margin: 12,
-        width: 60,
+        height: '100%',
+        width: '100%',
+        alignItems: 'center'
     },
     address: {
-        margin: 12,
-        width: 300
-    },
-    regional_information: {
-        margin: 7,
-        flexDirection: 'row',
+        margin: 6,
+        width: '90%'
     },
     city: {
-        margin: 5,
-        padding: 0,
-        width: 95
+        margin: 6,
+        width: '90%'
+    },
+    regional_information: {
+        margin: 6,
+        width: '90%',
+        flexDirection: 'row',
+        justifyContent: 'space-between'
     },
     state: {
-        margin: 5,
-        padding: 0,
-        width: 90
+        width: '48%'
     },
     zip: {
-        margin: 5,
-        padding: 0,
-        width: 95
+        width: '48%'
+    },
+    meter_container: {
+        width: '90%',
+        marginTop: 5,
+        alignItems: 'flex-start'
+    },
+    meter: {
+        width: '25%',
     },
     action: {
         margin: 0,
