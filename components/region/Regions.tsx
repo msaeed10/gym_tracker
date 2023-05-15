@@ -1,53 +1,70 @@
 import { StyleSheet, View } from "react-native"
-import AddRegionButton from "./AddRegionButton"
-import RegionList from "./RegionList"
-import AddRegionForm from "./AddRegionForm"
-import { useState } from "react"
-import { Region } from "../../model/Region"
+import { useState } from 'react'
+import "react-native-get-random-values";
+import AddRegionButton from './AddRegionButton'
+import RegionList from './RegionList'
+import AddRegionForm from './AddRegionForm'
+import { RegionModel } from "../../model/RegionModel"
+import RealmContext, { Region } from "../../db/RegionDatabase"
+
+const { useQuery, useRealm } = RealmContext;
 
 const Regions = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [regions, setRegions] = useState<Array<Region>>([{
-        id: 1,
-        address: "this is the location",
-        city: "city",
-        state: "state",
-        zipCode: "504324",
-        meters: "200"
-    }]);
     const [regionToEdit, setRegionToEdit] = useState<Region>();
+    const regions = useQuery(Region).filtered("user == $0", "testUser");
+    const realm = useRealm();
 
-    const getRandomNumber = () => {
-        const randomNumber = Math.floor(Math.random() * 10000) + 1;
-        return randomNumber;
-    }
+    const handleSaveRegion = (region: RegionModel) => {
+        // make api call to google to verify address
 
-    const handleSaveRegion = (region: Region) => {
+        // if not valid dont save and drop down notifying user
+        
+        // if valid continue
         if(region.id == undefined) {
-            region.id = getRandomNumber();
-            setRegions([...regions, region])
+            saveRegion(region);
         } else {
-            let regionIndex = regions.findIndex((item) => item.id === region.id);
-            let updatedRegions = regions;
-            updatedRegions[regionIndex] = region;
-            setRegions(updatedRegions)
+            updateRegion(region);
         }
     }
 
-    const handleEditRegion = (region: Region) => {
-        triggerModalOpen();
+    const saveRegion = (region: RegionModel) => {
+        realm.write(() => {
+            realm.create('Region', {
+                _id: new Realm.BSON.ObjectId().toHexString(),
+                address: region.address,
+                city: region.city,
+                state: region.state,
+                zipCode: region.zipCode,
+                meters: region.meters,
+                user: "testUser"
+            });
+        });
+    }
+
+    const updateRegion = (region: RegionModel) => {
+        let existingRegion = regions.filtered("_id == $0", region.id)[0];
+
+        realm.write(() => {
+            existingRegion.address = region.address;
+            existingRegion.city = region.city;
+            existingRegion.state = region.state;
+            existingRegion.zipCode = region.zipCode;
+            existingRegion.meters = region.meters;
+        });
+    }
+
+    const handleRemoveRegion = (regionId: string) => {
+        let region = regions.filtered('_id == $0', regionId)[0];
+
+        realm.write(() => {
+            realm.delete(region);
+        });
+    }
+
+    const triggerModalOpen = (region?: Region) => {
         setRegionToEdit(region);
-    }
-
-    const handleRemoveRegion = (regionId: number) => {
-        let updatedRegions = regions.filter((item, index) => index !== regionId)
-        // TODO: update api call when backend is complete
-        setRegions(updatedRegions);
-    }
-
-    const triggerModalOpen = () => {
         setIsModalOpen(!isModalOpen);
-        setRegionToEdit(undefined);
     } 
 
     return (
@@ -57,17 +74,18 @@ const Regions = () => {
                 <AddRegionForm 
                     handleSaveRegion={handleSaveRegion}
                     triggerModalOpen={triggerModalOpen} 
-                    regionToEdit={regionToEdit} 
+                    region={regionToEdit}
                 /> 
                 :
                 <>
                     <RegionList 
                         regions={regions} 
-                        handleRemoveRegion={handleRemoveRegion} 
-                        handleEditRegion={handleEditRegion} />
+                        handleRemoveRegion={handleRemoveRegion}
+                        handleUpdateRegion={triggerModalOpen}
+                    />
                     
                     <AddRegionButton triggerModalOpen={triggerModalOpen} />
-                </>
+                </> 
             }
         </View>
     )
