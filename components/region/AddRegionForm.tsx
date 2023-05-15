@@ -3,6 +3,7 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import { RegionModel } from '../../model/RegionModel';
 import { Region } from '../../db/RegionDatabase';
+import { REACT_APP_GOOGLE_API_KEY } from "@env";
 
 interface AddRegionFormProps {
     triggerModalOpen: () => void;
@@ -12,7 +13,6 @@ interface AddRegionFormProps {
 
 // Pass in props for reusablility on an edit event
 const AddRegionForm:React.FC<AddRegionFormProps> = ({region, triggerModalOpen, handleSaveRegion}) => {
-    const [showDropDown, setShowDropDown] = useState(false);
     const [address, onAddress] = useState(region?.address);
     const [city, onCity] = useState(region?.city);
     const [state, onState] = useState(region?.state);
@@ -39,8 +39,8 @@ const AddRegionForm:React.FC<AddRegionFormProps> = ({region, triggerModalOpen, h
     }
 
     return(
-        <ScrollView>
-            <View style={styles.input_container}>
+        <View style={styles.form_container}>
+            <ScrollView contentContainerStyle={styles.input_container}>
                 <TextInput
                     mode="outlined"
                     label="Address"
@@ -48,7 +48,6 @@ const AddRegionForm:React.FC<AddRegionFormProps> = ({region, triggerModalOpen, h
                     value={address}
                     onChangeText={onAddress}
                 />
-
                 <TextInput
                     mode="outlined"
                     label="City"
@@ -81,24 +80,27 @@ const AddRegionForm:React.FC<AddRegionFormProps> = ({region, triggerModalOpen, h
                         value={meters}
                     />
                 </View>
-            </View>
+            </ScrollView>
             <View style={styles.action}>
                 <Pressable
-                    style={styles.button}
+                    style={[styles.button, styles.save]}
                     onPress={handleSave}>
                         <Text>Save</Text>
                 </Pressable>
                 <Pressable
-                    style={styles.button}
+                    style={[styles.button, styles.cancel]}
                     onPress={triggerModalOpen}>
                         <Text>Cancel</Text>
                 </Pressable>
             </View>
-        </ScrollView>
+        </View>
     )
 }
 
 const styles = StyleSheet.create({
+    form_container: {
+        height: '100%',
+    },
     input_container: {
         height: '100%',
         width: '100%',
@@ -133,14 +135,18 @@ const styles = StyleSheet.create({
         width: '25%',
     },
     action: {
-        margin: 0,
+        width: '100%',
+        position: 'absolute', 
+        left: 0, 
+        right: 0,
+        bottom: 0, 
+        justifyContent: 'center',
         flexDirection: 'row',
-        justifyContent: 'flex-end',
-        alignItems: "flex-end",
+        marginBottom: 20
     },
     button: {
-        backgroundColor: '#FF2D00',
-        width: 60,
+        backgroundColor: '#8ED3E4',
+        width: '40%',
         height: 30,
         margin: 10,
         justifyContent: 'center',
@@ -154,6 +160,12 @@ const styles = StyleSheet.create({
         shadowRadius: 2,
         elevation: 2
     },
+    save: {
+        backgroundColor: '#8ED3E4'
+    },
+    cancel: {
+        backgroundColor: '#FB7878'
+    }
 });
 
 
