@@ -1,6 +1,6 @@
 import React from "react";
 import { Pressable, StyleSheet, Text, View} from 'react-native';
-
+import Icon from 'react-native-vector-icons/Ionicons';
 interface AddRegionButtonProps {
     triggerModalOpen: () => void;
 }
@@ -9,9 +9,12 @@ const AddRegionButton:React.FC<AddRegionButtonProps> = ({triggerModalOpen}) => {
     return (
         <View style={styles.add_container}>
             <Pressable 
-                onPress={() => triggerModalOpen()}
-                style={styles.add_button}>
-                    <Text>Click Here</Text>
+                onPress={() => triggerModalOpen()}>
+                    <Icon 
+                        style={styles.add_button}
+                        name="add-circle"
+                        size={110}
+                    />
             </Pressable>
         </View>
     )
@@ -28,14 +31,9 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     add_button: {
-        backgroundColor: '#A95252',
+        color: '#8ED3E4',
         justifyContent: 'center',
         alignItems: 'center',
-        height: 100,
-        width: 100,
-        borderRadius: 100,
-        borderWidth: 0.2,
-        borderColor: '#000',
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.25,
