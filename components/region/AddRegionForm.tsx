@@ -3,7 +3,7 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import { RegionModel } from '../../model/RegionModel';
 import { Region } from '../../db/RegionDatabase';
-import { REACT_APP_GOOGLE_API_KEY } from "@env";
+import { REACT_APP_ADDRESS_VALIDATION, REACT_APP_ADDRESS_VALIDATION_KEY } from "@env";
 
 interface AddRegionFormProps {
     triggerModalOpen: () => void;
@@ -32,7 +32,28 @@ const AddRegionForm:React.FC<AddRegionFormProps> = ({region, triggerModalOpen, h
 
     const handleSave = () => {
         // handle input validation (all fields are mandatory)
-
+        fetch(`${REACT_APP_ADDRESS_VALIDATION}key=${REACT_APP_ADDRESS_VALIDATION_KEY}`, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(
+                {
+                    address: {
+                        regionCode: "US",
+                        addressLines: [address, `${city}, ${state}, ${zip}`]
+                    },
+                }
+            )
+        })
+        .then(response => response.json())
+        .then(json => {
+          console.log(json);
+        })
+        .catch(error => {
+          console.error(error);
+        });
         // close modal
         handleSaveRegion(createRegionObjectFromState())
         triggerModalOpen()
