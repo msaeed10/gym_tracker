@@ -2,11 +2,11 @@ import Realm from 'realm';
 import {createRealmContext} from '@realm/react';
 
 export class Region extends Realm.Object<Region> {
-    _id!: Realm.BSON.ObjectId;
-    address!: string;
-    city!: string;
-    state!: string;
-    zipCode!: string;
+    _id!: string;
+    location!: string;
+    name!: string;
+    latitude!: number;
+    longitude!: number;
     meters!: string;
     user?: string;
   
@@ -14,11 +14,11 @@ export class Region extends Realm.Object<Region> {
         name: "Region",
         properties: {
             _id: "string",
-            address: "string",
-            city: "string",
-            state: "string",
-            zipCode: "string",
-            meters: "string",
+            location: "string",
+            latitude: "float",
+            longitude: "float",
+            name: "string",
+            meters: "int",
             user: "string"
         },
         primaryKey: "_id"
@@ -27,6 +27,7 @@ export class Region extends Realm.Object<Region> {
 
 const regionConfig: Realm.Configuration = {
     schema: [Region],
+    deleteRealmIfMigrationNeeded: true
 };
 
 export default createRealmContext(regionConfig)

@@ -1,32 +1,27 @@
-import { View, ScrollView, Text, StyleSheet, Pressable } from 'react-native';
-import { Region } from '../../db/RegionDatabase';
-import CardInformation from '../card/CardInformation';
+import React from 'react';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { SearchResultModel } from '../../model/SearchResultModel';
+import DisplayCard from './DisplayCard';
 
-interface RegionListProps {
-    regions: ReadonlyArray<any>;
-    handleRemoveRegion: (regionId: string) => void;
-    handleUpdateRegion: (region? : Region) => void;
+interface DisplaySearchResultProps {
+    places: Array<SearchResultModel>;
+    handleSelect: (searchResultModel: SearchResultModel) => void;
+    handleUnselect: (placeId : string) => void;
 }
 
-const RegionList:React.FC<RegionListProps> = ({regions, handleUpdateRegion, handleRemoveRegion}) => {
+const DisplaySearchResult:React.FC<DisplaySearchResultProps> = ({places, handleSelect, handleUnselect}) => {
     const generatCards = () => {
-        return regions.map((place, index) => {
+        return places.map((place, index) => {
             return (
                 <View key={index} style={styles.card}>
-                    <CardInformation place={place} />
-                    <View style={styles.action}>
-                        <Pressable 
-                            onPress={() => {handleUpdateRegion(place)}}
-                            style={[styles.button, styles.edit]}><Text>Edit</Text></Pressable>
-                        <Pressable 
-                            onPress={() => {handleRemoveRegion(place._id)}} 
-                            style={[styles.button, styles.delete]}><Text>Delete</Text></Pressable> 
-                    </View>
+                    <DisplayCard place={place} 
+                        handleSelect={handleSelect} 
+                        handleUnselect={handleUnselect} />
                 </View>
             )});
     }
 
-    return(
+    return (
         <ScrollView contentContainerStyle={styles.card_container}>
             {generatCards()}
         </ScrollView>
@@ -89,4 +84,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default RegionList;
+export default DisplaySearchResult;

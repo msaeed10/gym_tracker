@@ -1,107 +1,107 @@
-import React, { useState } from 'react';
-import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { TextInput } from 'react-native-paper';
-import { RegionModel } from '../../model/RegionModel';
+import Geolocation from '@react-native-community/geolocation';
 import { Region } from '../../db/RegionDatabase';
-import { REACT_APP_ADDRESS_VALIDATION, REACT_APP_ADDRESS_VALIDATION_KEY } from "@env";
+import { REACT_APP_PLACES_API, REACT_APP_RADIUS, REACT_APP_TYPE, REACT_APP_PLACES_API_KEY } from "@env";
+import { CoordsModel } from '../../model/CoordsModel';
+import { SearchResultModel } from '../../model/SearchResultModel';
+import DisplaySearchResult from './DisplaySearchResult';
 
 interface AddRegionFormProps {
     triggerModalOpen: () => void;
-    handleSaveRegion: (region: RegionModel) => void;
-    region?: Region;
+    handleSavePlaces: (places: Array<SearchResultModel>) => void;
+    savedPlaces: ReadonlyArray<Region>;
 }
 
 // Pass in props for reusablility on an edit event
-const AddRegionForm:React.FC<AddRegionFormProps> = ({region, triggerModalOpen, handleSaveRegion}) => {
-    const [address, onAddress] = useState(region?.address);
-    const [city, onCity] = useState(region?.city);
-    const [state, onState] = useState(region?.state);
-    const [zip, onZipCode] = useState(region?.zipCode);
-    const [meters, onMeters] = useState(region?.meters);
+const AddRegionForm:React.FC<AddRegionFormProps> = ({savedPlaces, triggerModalOpen, handleSavePlaces}) => {
+    const [location, setLocation] = useState("");
+    const [coords, setCoords] = useState<CoordsModel>();
+    const [searchResults, setSearchResults] = useState<Array<SearchResultModel>>([]);
+    const [selectedPlaces, setSelectedPlaces] = useState<Array<SearchResultModel>>([]);
 
-    const createRegionObjectFromState = () => {
-        return {
-            id: region?._id,
-            address: address!,
-            city: city!,
-            state: state!,
-            zipCode: zip!,
-            meters: meters!
-        };
-    }
+    useEffect(() => {
+        Geolocation.getCurrentPosition(info => 
+            setCoords({latitude: info.coords.latitude, longitude: info.coords.longitude})
+        )
+    }, [])
 
     const handleSave = () => {
-        // handle input validation (all fields are mandatory)
-        fetch(`${REACT_APP_ADDRESS_VALIDATION}key=${REACT_APP_ADDRESS_VALIDATION_KEY}`, {
+        handleSavePlaces(selectedPlaces);
+        triggerModalOpen();
+    }
+
+    const placeAlreadySaved = (place: any): boolean => {
+        let foundPlace = savedPlaces.filter(savedPlace => savedPlace._id === place.place_id);
+        return foundPlace.length > 0 ? true : false
+    }
+
+    const handleSearch = () => {
+        fetch(`${REACT_APP_PLACES_API}keyword=${location}&location=${coords!.latitude}%2C${coords!.longitude}&radius=${REACT_APP_RADIUS}&type=${REACT_APP_TYPE}&key=${REACT_APP_PLACES_API_KEY}`, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(
-                {
-                    address: {
-                        regionCode: "US",
-                        addressLines: [address, `${city}, ${state}, ${zip}`]
-                    },
-                }
-            )
+            }
         })
         .then(response => response.json())
         .then(json => {
-          console.log(json);
+            let results: Array<SearchResultModel> = [];
+            json.results.map((place: any) => {
+                if(!placeAlreadySaved(place)) {
+                    results.push(
+                        {
+                            placeId: place.place_id,
+                            location: place.vicinity,
+                            geometry: {
+                                latitude: place.geometry.location.lat,
+                                longitude: place.geometry.location.lng
+                            },
+                            name: place.name
+                        }
+                    );
+                }
+            });
+            
+            setSearchResults(results);
         })
         .catch(error => {
           console.error(error);
         });
-        // close modal
-        handleSaveRegion(createRegionObjectFromState())
-        triggerModalOpen()
+    }
+
+    const handleSelect = (place: SearchResultModel) => {
+        setSelectedPlaces([...selectedPlaces, place]);
+    }
+
+    const handleUnselect = (placeId: string) => {
+        let updatedPlacces = selectedPlaces.filter(place => place.placeId != placeId);
+        setSelectedPlaces([...updatedPlacces]);
     }
 
     return(
         <View style={styles.form_container}>
-            <ScrollView contentContainerStyle={styles.input_container}>
+            <View style={styles.input_container}>
                 <TextInput
                     mode="outlined"
-                    label="Address"
-                    style={styles.address}
-                    value={address}
-                    onChangeText={onAddress}
+                    label="Location Search"
+                    style={styles.location}
+                    value={location}
+                    onChangeText={setLocation}
                 />
-                <TextInput
-                    mode="outlined"
-                    label="City"
-                    style={styles.city}
-                    onChangeText={onCity}
-                    value={city}
-                />
-                <View style={styles.regional_information}>
-                    <TextInput
-                        mode="outlined"
-                        label="State"
-                        onChangeText={onState}
-                        style={styles.state}
-                        value={state}
-                    />
-                    <TextInput
-                        mode="outlined"
-                        label="Zip Code"
-                        style={styles.zip}
-                        onChangeText={onZipCode}
-                        value={zip}
-                    />
-                </View>
-                <View style={styles.meter_container}>
-                    <TextInput
-                        mode="outlined"
-                        label="Meters"
-                        style={styles.meter}
-                        onChangeText={onMeters}
-                        value={meters}
-                    />
-                </View>
-            </ScrollView>
+                <Pressable
+                    style={[styles.button, styles.search]}
+                    onPress={handleSearch}>
+                        <Text>Search</Text>
+                </Pressable>
+            </View>
+            <View style={styles.result_container}>
+                <DisplaySearchResult 
+                    places={searchResults} 
+                    handleSelect={handleSelect} 
+                    handleUnselect={handleUnselect} />
+            </View>
             <View style={styles.action}>
                 <Pressable
                     style={[styles.button, styles.save]}
@@ -123,52 +123,48 @@ const styles = StyleSheet.create({
         height: '100%',
     },
     input_container: {
-        height: '100%',
+        backgroundColor: 'white',
+        height: 80,
+        paddingTop: 10,
         width: '100%',
-        alignItems: 'center'
-    },
-    address: {
-        margin: 6,
-        width: '90%'
-    },
-    city: {
-        margin: 6,
-        width: '90%'
-    },
-    regional_information: {
-        margin: 6,
-        width: '90%',
         flexDirection: 'row',
-        justifyContent: 'space-between'
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderBottomWidth: 1,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 2,
     },
-    state: {
-        width: '48%'
+    location: {
+        justifyContent: 'center',
+        maxHeight: 45,
+        width: '70%',
     },
-    zip: {
-        width: '48%'
+    search: {
+        height: 30,
+        width: '20%',
+        backgroundColor: '#FB7878'
     },
-    meter_container: {
-        width: '90%',
-        marginTop: 5,
-        alignItems: 'flex-start'
-    },
-    meter: {
-        width: '25%',
+    result_container: {
+        marginBottom: 140,
     },
     action: {
+        backgroundColor: 'white',
+        height: 60,
         width: '100%',
         position: 'absolute', 
-        left: 0, 
-        right: 0,
         bottom: 0, 
         justifyContent: 'center',
         flexDirection: 'row',
-        marginBottom: 20
+        borderTopWidth: 1,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: -2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 2,
     },
     button: {
         backgroundColor: '#8ED3E4',
-        width: '40%',
-        height: 30,
         margin: 10,
         justifyContent: 'center',
         alignItems: 'center',
@@ -182,9 +178,13 @@ const styles = StyleSheet.create({
         elevation: 2
     },
     save: {
+        width: '40%',
+        height: 30,
         backgroundColor: '#8ED3E4'
     },
     cancel: {
+        width: '40%',
+        height: 30,
         backgroundColor: '#FB7878'
     }
 });
