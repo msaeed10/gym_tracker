@@ -4,7 +4,7 @@ module.exports = {
     [
       "module:react-native-dotenv",
       {
-        envName: ["REACT_APP_ADDRESS_VALIDATION", "REACT_APP_ADDRESS_VALIDATION_KEY"],
+        envName: ["REACT_APP_PLACES_API", "REACT_APP_RADIUS", "REACT_APP_TYPE", "REACT_APP_PLACES_API_KEY"],
         moduleName: "@env",
         path: ".env"
       }

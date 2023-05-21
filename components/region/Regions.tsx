@@ -6,52 +6,46 @@ import RegionList from './RegionList'
 import AddRegionForm from './AddRegionForm'
 import { RegionModel } from "../../model/RegionModel"
 import RealmContext, { Region } from "../../db/RegionDatabase"
+import { SearchResultModel } from "../../model/SearchResultModel";
 
 const { useQuery, useRealm } = RealmContext;
 
 const Regions = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [regionToEdit, setRegionToEdit] = useState<Region>();
     const regions = useQuery(Region).filtered("user == $0", "testUser");
     const realm = useRealm();
 
-    const handleSaveRegion = (region: RegionModel) => {
-        // make api call to google to verify address
-
-        // if not valid dont save and drop down notifying user
-        
-        // if valid continue
-        if(region.id == undefined) {
-            saveRegion(region);
-        } else {
-            updateRegion(region);
-        }
+    // remove the places from the search result
+    const handleSavePlaces = (places: Array<SearchResultModel>) => {
+        places.forEach(place => {
+            savePlace(place)
+        });
     }
 
-    const saveRegion = (region: RegionModel) => {
+    const savePlace = (place: SearchResultModel) => {
         realm.write(() => {
             realm.create('Region', {
-                _id: new Realm.BSON.ObjectId().toHexString(),
-                address: region.address,
-                city: region.city,
-                state: region.state,
-                zipCode: region.zipCode,
-                meters: region.meters,
+                _id: place.placeId,
+                location: place.location,
+                name: place.name,
+                latitude: place.geometry.latitude,
+                longitude: place.geometry.longitude,
+                meters: 100,
                 user: "testUser"
             });
         });
     }
 
     const updateRegion = (region: RegionModel) => {
-        let existingRegion = regions.filtered("_id == $0", region.id)[0];
+        // let existingRegion = regions.filtered("_id == $0", region.id)[0];
 
-        realm.write(() => {
-            existingRegion.address = region.address;
-            existingRegion.city = region.city;
-            existingRegion.state = region.state;
-            existingRegion.zipCode = region.zipCode;
-            existingRegion.meters = region.meters;
-        });
+        // realm.write(() => {
+        //     existingRegion.address = region.address;
+        //     existingRegion.city = region.city;
+        //     existingRegion.state = region.state;
+        //     existingRegion.zipCode = region.zipCode;
+        //     existingRegion.meters = region.meters;
+        // });
     }
 
     const handleRemoveRegion = (regionId: string) => {
@@ -62,8 +56,7 @@ const Regions = () => {
         });
     }
 
-    const triggerModalOpen = (region?: Region) => {
-        setRegionToEdit(region);
+    const triggerModalOpen = () => {
         setIsModalOpen(!isModalOpen);
     } 
 
@@ -72,9 +65,9 @@ const Regions = () => {
             {
             isModalOpen ? 
                 <AddRegionForm 
-                    handleSaveRegion={handleSaveRegion}
+                    savedPlaces={regions}
+                    handleSavePlaces={handleSavePlaces}
                     triggerModalOpen={triggerModalOpen} 
-                    region={regionToEdit}
                 /> 
                 :
                 <>
