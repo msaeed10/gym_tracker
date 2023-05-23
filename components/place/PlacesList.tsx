@@ -1,5 +1,4 @@
 import { View, ScrollView, Text, StyleSheet, Pressable } from 'react-native';
-import { Region } from '../../db/RegionDatabase';
 import CardInformation from '../card/CardInformation';
 
 interface RegionListProps {
