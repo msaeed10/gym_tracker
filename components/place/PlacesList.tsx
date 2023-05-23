@@ -3,23 +3,19 @@ import { Region } from '../../db/RegionDatabase';
 import CardInformation from '../card/CardInformation';
 
 interface RegionListProps {
-    regions: ReadonlyArray<any>;
-    handleRemoveRegion: (regionId: string) => void;
-    handleUpdateRegion: (region? : Region) => void;
+    places: ReadonlyArray<any>;
+    handleRemovePlace: (regionId: string) => void;
 }
 
-const RegionList:React.FC<RegionListProps> = ({regions, handleUpdateRegion, handleRemoveRegion}) => {
+const PlacesList:React.FC<RegionListProps> = ({places, handleRemovePlace}) => {
     const generatCards = () => {
-        return regions.map((place, index) => {
+        return places.map((place, index) => {
             return (
                 <View key={index} style={styles.card}>
                     <CardInformation place={place} />
                     <View style={styles.action}>
                         <Pressable 
-                            onPress={() => {handleUpdateRegion(place)}}
-                            style={[styles.button, styles.edit]}><Text>Edit</Text></Pressable>
-                        <Pressable 
-                            onPress={() => {handleRemoveRegion(place._id)}} 
+                            onPress={() => {handleRemovePlace(place._id)}} 
                             style={[styles.button, styles.delete]}><Text>Delete</Text></Pressable> 
                     </View>
                 </View>
@@ -89,4 +85,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default RegionList;
+export default PlacesList;
