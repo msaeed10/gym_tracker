@@ -2,16 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import Geolocation from '@react-native-community/geolocation';
-import { Region } from '../../db/RegionDatabase';
-import { REACT_APP_PLACES_API, REACT_APP_RADIUS, REACT_APP_TYPE, REACT_APP_PLACES_API_KEY } from "@env";
+import DisplaySearchResult from './DisplaySearchResult';
+import { Place } from '../../db/PlaceDatabase';
 import { CoordsModel } from '../../model/CoordsModel';
 import { SearchResultModel } from '../../model/SearchResultModel';
-import DisplaySearchResult from './DisplaySearchResult';
+import { REACT_APP_PLACES_API, REACT_APP_RADIUS, REACT_APP_TYPE, REACT_APP_PLACES_API_KEY } from "@env";
 
 interface AddRegionFormProps {
     triggerModalOpen: () => void;
     handleSavePlaces: (places: Array<SearchResultModel>) => void;
-    savedPlaces: ReadonlyArray<Region>;
+    savedPlaces: ReadonlyArray<Place>;
 }
 
 // Pass in props for reusablility on an edit event

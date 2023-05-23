@@ -1,4 +1,4 @@
-const isWithinRegion = (point: { latitude: number; longitude: number; }) => {
+const isWithinPlace = (point: { latitude: number; longitude: number; }) => {
     let j = 0;
     //TODO: make api call to get geofences made
     let geofence = JSON.parse(require('../../data/regions.json'));
@@ -22,3 +22,5 @@ const isWithinRegion = (point: { latitude: number; longitude: number; }) => {
     }
     return oddNodes;
 }
+
+export default isWithinPlace;
