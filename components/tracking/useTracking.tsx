@@ -46,9 +46,9 @@ const useTracking = () => {
             }
             setCurrentLocation(coordLocation);
 
-            const closestPlace: Place = getClosestFence(coordLocation, places);
+            const closestPlace: Place | undefined = getClosestFence(coordLocation, places);
 
-            if(isWithinPlace(coordLocation, closestPlace.geofence)) {
+            if(isWithinPlace(coordLocation, closestPlace!.geofence)) {
                 setTimer(Date.now())
             };
         });
