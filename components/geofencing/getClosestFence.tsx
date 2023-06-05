@@ -14,8 +14,7 @@ export const getClosestFence = (coord: CoordsModel, places: ReadonlyArray<Place>
         let latDiff = distance(place.latitude, coord.latitude);
         let longDiff = distance(place.longitude, coord.longitude);
         
-        const a =
-            Math.pow(Math.sin(latDiff / 2), 2) +
+        const a = Math.pow(Math.sin(latDiff / 2), 2) +
             Math.pow(Math.sin(longDiff / 2), 2) * 
             Math.cos(toRadian(coord.latitude)) * Math.cos(toRadian(place.latitude));
 
