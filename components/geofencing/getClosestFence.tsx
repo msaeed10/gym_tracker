@@ -5,7 +5,7 @@ import { Place } from "../../db/PlaceDatabase"
 export const getClosestFence = (coord: CoordsModel, places: ReadonlyArray<Place>): Place | undefined => {
     const toRadian = (angle: number) => (Math.PI / 180) * angle;
     const distance = (a: number, b: number) => (Math.PI / 180) * (a - b);
-    const RADIUS_OF_EARTH_IN_KM = 6371; // km 
+    const RADIUS_OF_EARTH_IN_KM = 6371; 
 
     let closestDistance = Number.MAX_VALUE;
     let closestPlace: Place | undefined = undefined;
