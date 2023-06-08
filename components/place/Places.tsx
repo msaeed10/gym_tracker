@@ -12,7 +12,7 @@ const { useQuery, useRealm } = RealmContext;
 
 const Regions = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const places = useQuery(Place).filtered("user == $0", "testUser");
+    const places = useQuery(Place);
     const realm = useRealm();
 
     const handleSavePlaces = (places: Array<SearchResultModel>) => {

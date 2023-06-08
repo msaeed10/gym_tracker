@@ -25,7 +25,7 @@ function App(): JSX.Element {
           <Tab.Screen
             name="Calendar"
             component={CalendarTracker}/>
-            <Tab.Screen name="Regions" component={Regions} />
+            <Tab.Screen name="Places" component={Regions} />
         </Tab.Navigator>
       </NavigationContainer>
     </RealmProvider>

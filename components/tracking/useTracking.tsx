@@ -9,9 +9,9 @@ const { useQuery } = RealmContext;
 
 const useTracking = () => {
     const [timer, setTimer] = useState(0);
-    const [currentLocation, setCurrentLocation] = useState<CoordsModel>();
-    const places: ReadonlyArray<Place> = useQuery(Place).filtered("user == $0", "testUser");
-
+    const [isInCurrentPlace, setIsInCurrentPlace] = useState(false);
+    const places: ReadonlyArray<Place> = useQuery(Place);
+    let totalEstimatedTime = 0;
 
     useEffect(() => {
         BackgroundGeolocation.configure({
@@ -44,13 +44,16 @@ const useTracking = () => {
                 latitude: location.latitude, 
                 longitude: location.longitude
             }
-            setCurrentLocation(coordLocation);
 
             const closestPlace: Place | undefined = getClosestFence(coordLocation, places);
 
-            if(isWithinPlace(coordLocation, closestPlace!.geofence)) {
-                setTimer(Date.now())
+            if(isWithinPlace(coordLocation, closestPlace!.geofence) && !isInCurrentPlace) {
+                setTimer(Date.now());
+                setIsInCurrentPlace(true);
             };
+            if(isInCurrentPlace && !isWithinPlace(coordLocation, closestPlace!.geofence)) {
+                totalEstimatedTime = timer - Date.now();
+            }
         });
     });
 }
