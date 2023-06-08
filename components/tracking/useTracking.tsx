@@ -14,6 +14,7 @@ const useTracking = () => {
     let totalEstimatedTime = 0;
 
     useEffect(() => {
+        console.log("configuring tracking")
         BackgroundGeolocation.configure({
             desiredAccuracy: BackgroundGeolocation.HIGH_ACCURACY,
             stationaryRadius: 50,
@@ -40,6 +41,7 @@ const useTracking = () => {
         });
 
         BackgroundGeolocation.on('location', (location) => {
+            console.log(location);
             const coordLocation: CoordsModel = {
                 latitude: location.latitude, 
                 longitude: location.longitude
@@ -48,11 +50,13 @@ const useTracking = () => {
             const closestPlace: Place | undefined = getClosestFence(coordLocation, places);
 
             if(isWithinPlace(coordLocation, closestPlace!.geofence) && !isInCurrentPlace) {
+                console.log("is in the place");
                 setTimer(Date.now());
                 setIsInCurrentPlace(true);
             };
             if(isInCurrentPlace && !isWithinPlace(coordLocation, closestPlace!.geofence)) {
                 totalEstimatedTime = timer - Date.now();
+                console.log(`is not in the place ${totalEstimatedTime}`);
             }
         });
     });
