@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { CalendarList } from "react-native-calendars";
 import { StyleSheet, Text, View } from 'react-native';
+import useTracking from "../tracking/useTracking";
 
 const CalendarTracker = () => {
     const [datesGone, setDatesGone] = useState({'2023-03-25': {marked: true, dotColor: 'green'}});
-
+    useTracking();
     return (
         <View style={styles.calendarWrapper}>
             <CalendarList
