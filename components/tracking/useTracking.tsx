@@ -9,11 +9,12 @@ const { useQuery } = RealmContext;
 
 const useTracking = () => {
     const [timer, setTimer] = useState(0);
-    const [currentLocation, setCurrentLocation] = useState<CoordsModel>();
-    const places: ReadonlyArray<Place> = useQuery(Place).filtered("user == $0", "testUser");
-
+    const [isInCurrentPlace, setIsInCurrentPlace] = useState(false);
+    const places: ReadonlyArray<Place> = useQuery(Place);
+    let totalEstimatedTime = 0;
 
     useEffect(() => {
+        console.log("configuring tracking")
         BackgroundGeolocation.configure({
             desiredAccuracy: BackgroundGeolocation.HIGH_ACCURACY,
             stationaryRadius: 50,
@@ -40,17 +41,23 @@ const useTracking = () => {
         });
 
         BackgroundGeolocation.on('location', (location) => {
+            console.log(location);
             const coordLocation: CoordsModel = {
                 latitude: location.latitude, 
                 longitude: location.longitude
             }
-            setCurrentLocation(coordLocation);
 
             const closestPlace: Place | undefined = getClosestFence(coordLocation, places);
 
-            if(isWithinPlace(coordLocation, closestPlace!.geofence)) {
-                setTimer(Date.now())
+            if(isWithinPlace(coordLocation, closestPlace!.geofence) && !isInCurrentPlace) {
+                console.log("is in the place");
+                setTimer(Date.now());
+                setIsInCurrentPlace(true);
             };
+            if(isInCurrentPlace && !isWithinPlace(coordLocation, closestPlace!.geofence)) {
+                totalEstimatedTime = timer - Date.now();
+                console.log(`is not in the place ${totalEstimatedTime}`);
+            }
         });
     });
 }
