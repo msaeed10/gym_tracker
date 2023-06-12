@@ -7,18 +7,17 @@ import isWithinPlace from '../geofencing/isWithinPlace';
 
 const { useQuery } = RealmContext;
 
-const useTracking = () => {
-    const [timer, setTimer] = useState(0);
-    const [isInCurrentPlace, setIsInCurrentPlace] = useState(false);
+const useTracking = (setDate: (date: string) => void) => {
     const places: ReadonlyArray<Place> = useQuery(Place);
     let totalEstimatedTime = 0;
+    let startTime = 0;
+    let isInCurrentPlace = false
 
     useEffect(() => {
-        console.log("configuring tracking")
         BackgroundGeolocation.configure({
             desiredAccuracy: BackgroundGeolocation.MEDIUM_ACCURACY,
-            stationaryRadius: 50,
-            distanceFilter: 50,
+            stationaryRadius: 10,
+            distanceFilter: 10,
             debug: false,
             stopOnTerminate: true,
             locationProvider: BackgroundGeolocation.DISTANCE_FILTER_PROVIDER,
@@ -35,20 +34,31 @@ const useTracking = () => {
         });
 
         BackgroundGeolocation.on('location', (location) => {
+            console.log(location);
             const coordLocation: CoordsModel = {
                 latitude: location.latitude, 
                 longitude: location.longitude
             }
             const closestPlace: Place | undefined = getClosestFence(coordLocation, places);
 
+            console.log(closestPlace)
             if(isWithinPlace(coordLocation, closestPlace!.geofence) && !isInCurrentPlace) {
-                console.log("is in the place");
-                setTimer(Date.now());
-                setIsInCurrentPlace(true);
+                startTime = Date.now();
+                isInCurrentPlace = true;
+                console.log(`is in the place ${startTime}`);
             };
+
+            console.log(isInCurrentPlace, !isWithinPlace(coordLocation, closestPlace!.geofence))
             if(isInCurrentPlace && !isWithinPlace(coordLocation, closestPlace!.geofence)) {
-                totalEstimatedTime = timer - Date.now();
+                console.log(`is in the place ${startTime}`);
+                totalEstimatedTime = (Date.now() - startTime) / 1000;
                 console.log(`is not in the place ${totalEstimatedTime}`);
+                if(totalEstimatedTime >= 5) {
+                    let date = new Date().toISOString().split('T')[0];
+                    setDate(date);                
+                }
+                startTime = 0;
+                isInCurrentPlace = false;
             }
         });
         BackgroundGeolocation.checkStatus(status => {

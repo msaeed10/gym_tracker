@@ -3,9 +3,28 @@ import { CalendarList } from "react-native-calendars";
 import { StyleSheet, Text, View } from 'react-native';
 import useTracking from "../tracking/useTracking";
 
+
+interface StringToMarkingDictionary {
+    [date: string]: Marking;
+}
+interface Marking {
+    marked: boolean,
+    dotColor: string
+}
+
 const CalendarTracker = () => {
-    const [datesGone, setDatesGone] = useState({'2023-03-25': {marked: true, dotColor: 'green'}});
-    useTracking();
+    const [datesGone, setDatesGone] = useState<any>({'2023-06-25': {marked: true, dotColor: 'green'}});
+
+    const setDate = (date: string) => {
+        // save date in db
+        let updatedDatesGone: StringToMarkingDictionary = datesGone;
+        updatedDatesGone[date] = {marked: true, dotColor: 'green'}
+        console.log(updatedDatesGone);
+        setDatesGone(updatedDatesGone);
+    }
+
+    useTracking(setDate);
+
     return (
         <View style={styles.calendarWrapper}>
             <CalendarList
@@ -19,6 +38,8 @@ const CalendarTracker = () => {
                 scrollEnabled={true}
                 // Enable or disable vertical scroll indicator. Default = false
                 showScrollIndicator={true}
+
+                markedDates = {datesGone}
             />
         </View>
     )
