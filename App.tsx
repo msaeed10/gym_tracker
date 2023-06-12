@@ -10,7 +10,7 @@ import { StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
-import Regions from './components/place/Places';
+import Places from './components/place/Places';
 import CalendarTracker from './components/calendar/CalendarTracker';
 import RealmContext from "./db/PlaceDatabase";
 
@@ -25,7 +25,7 @@ function App(): JSX.Element {
           <Tab.Screen
             name="Calendar"
             component={CalendarTracker}/>
-            <Tab.Screen name="Regions" component={Regions} />
+            <Tab.Screen name="Places" component={Places} />
         </Tab.Navigator>
       </NavigationContainer>
     </RealmProvider>

@@ -7,7 +7,7 @@ import isWithinPlace from '../geofencing/isWithinPlace';
 
 const { useQuery } = RealmContext;
 
-const useTracking = (setDate: (date: string) => void) => {
+const useTracking = (saveDate: (date: string) => void) => {
     const places: ReadonlyArray<Place> = useQuery(Place);
     let totalEstimatedTime = 0;
     let startTime = 0;
@@ -55,7 +55,7 @@ const useTracking = (setDate: (date: string) => void) => {
                 console.log(`is not in the place ${totalEstimatedTime}`);
                 if(totalEstimatedTime >= 5) {
                     let date = new Date().toISOString().split('T')[0];
-                    setDate(date);                
+                    saveDate(date);                
                 }
                 startTime = 0;
                 isInCurrentPlace = false;

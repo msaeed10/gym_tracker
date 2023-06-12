@@ -1,7 +1,22 @@
 import Realm from 'realm';
 import {createRealmContext} from '@realm/react';
 
-export class Geofence extends Realm.Object<Place> {
+
+export class Dates extends Realm.Object<Dates> {
+    _id!: Realm.BSON.ObjectId;
+    date!: string;
+
+    static schema = {
+        name: "Dates",
+        properties: {
+            _id: "objectId",
+            date: "string",
+        },
+        primaryKey: "_id"
+    };
+}
+
+export class Geofence extends Realm.Object<Geofence> {
     _id!: Realm.BSON.ObjectId;
     latitude!: number;
     longitude!: number;
@@ -43,7 +58,7 @@ export class Place extends Realm.Object<Place> {
 }
 
 const placeConfig: Realm.Configuration = {
-    schema: [Place, Geofence],
+    schema: [Place, Geofence, Dates],
     deleteRealmIfMigrationNeeded: true
 };
 
