@@ -23,9 +23,7 @@ export class Place extends Realm.Object<Place> {
     name!: string;
     latitude!: number;
     longitude!: number;
-    meters!: string;
     geofence!: Array<Geofence>;
-    user?: string;
   
     static schema = {
         name: "Place",
@@ -35,12 +33,10 @@ export class Place extends Realm.Object<Place> {
             latitude: "float",
             longitude: "float",
             name: "string",
-            meters: "int",
             geofence: {
                 type: "list",
                 objectType: "Geofence"
             },
-            user: "string"
         },
         primaryKey: "_id"
     };

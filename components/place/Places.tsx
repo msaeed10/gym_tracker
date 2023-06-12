@@ -23,7 +23,7 @@ const Regions = () => {
 
     const savePlace = (place: SearchResultModel) => {
         let computedGeofences = createFence({
-            meters: 100, 
+            meters: 150, 
             latitude: place.geometry.latitude,
             longitude: place.geometry.longitude
         });
@@ -46,8 +46,6 @@ const Regions = () => {
                 latitude: place.geometry.latitude,
                 longitude: place.geometry.longitude,
                 geofence: geofenceList,
-                meters: 100,
-                user: "testUser"
             });
         });
     }
