@@ -14,7 +14,6 @@ interface AddRegionFormProps {
     savedPlaces: ReadonlyArray<Place>;
 }
 
-// Pass in props for reusablility on an edit event
 const AddRegionForm:React.FC<AddRegionFormProps> = ({savedPlaces, triggerModalOpen, handleSavePlaces}) => {
     const [location, setLocation] = useState("");
     const [coords, setCoords] = useState<CoordsModel>();
@@ -38,7 +37,8 @@ const AddRegionForm:React.FC<AddRegionFormProps> = ({savedPlaces, triggerModalOp
     }
 
     const handleSearch = () => {
-        fetch(`${REACT_APP_PLACES_API}keyword=${location}&location=${coords!.latitude}%2C${coords!.longitude}&radius=${REACT_APP_RADIUS}&type=${REACT_APP_TYPE}&key=${REACT_APP_PLACES_API_KEY}`, {
+        const cleanLocation = location.trim().split(" ").join('+');
+        fetch(`${REACT_APP_PLACES_API}keyword=${cleanLocation}&location=${coords!.latitude}%2C${coords!.longitude}&radius=${REACT_APP_RADIUS}&type=${REACT_APP_TYPE}&key=${REACT_APP_PLACES_API_KEY}`, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
