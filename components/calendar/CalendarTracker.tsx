@@ -1,8 +1,7 @@
-import { useState } from "react";
 import { CalendarList } from "react-native-calendars";
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import useTracking from "../tracking/useTracking";
-import RealmContext, {Dates} from  "../../db/PlaceDatabase";
+import RealmContext, { Dates } from  "../../db/PlaceDatabase";
 
 interface StringToMarkingDictionary {
     [date: string]: Marking;

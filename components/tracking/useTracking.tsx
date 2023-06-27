@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import BackgroundGeolocation from '@mauron85/react-native-background-geolocation';
 import { CoordsModel } from '../../model/CoordsModel';
 import { getClosestFence } from '../geofencing/getClosestFence';
@@ -34,26 +34,20 @@ const useTracking = (saveDate: (date: string) => void) => {
         });
 
         BackgroundGeolocation.on('location', (location) => {
-            console.log(location);
             const coordLocation: CoordsModel = {
                 latitude: location.latitude, 
                 longitude: location.longitude
             }
             const closestPlace: Place | undefined = getClosestFence(coordLocation, places);
 
-            console.log(closestPlace)
             if(isWithinPlace(coordLocation, closestPlace!.geofence) && !isInCurrentPlace) {
                 startTime = Date.now();
                 isInCurrentPlace = true;
-                console.log(`is in the place ${startTime}`);
             };
 
-            console.log(isInCurrentPlace, !isWithinPlace(coordLocation, closestPlace!.geofence))
             if(isInCurrentPlace && !isWithinPlace(coordLocation, closestPlace!.geofence)) {
-                console.log(`is in the place ${startTime}`);
-                totalEstimatedTime = (Date.now() - startTime) / 1000;
-                console.log(`is not in the place ${totalEstimatedTime}`);
-                if(totalEstimatedTime >= 5) {
+                totalEstimatedTime = (Date.now() - startTime) / 1000 / 60;
+                if(totalEstimatedTime >= 30) {
                     let date = new Date().toISOString().split('T')[0];
                     saveDate(date);                
                 }
