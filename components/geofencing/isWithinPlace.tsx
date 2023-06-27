@@ -1,10 +1,10 @@
-const isWithinPlace = (point: { latitude: number; longitude: number; }) => {
-    let j = 0;
-    //TODO: make api call to get geofences made
-    let geofence = JSON.parse(require('../../data/regions.json'));
+import { Geofence } from "../../db/PlaceDatabase";
+import { CoordsModel } from "../../model/CoordsModel";
 
-    let edges = geofence.geofence_edges;
-    let numSides = geofence.geofence_edges.length;
+const isWithinPlace = (point: CoordsModel, geofence: ReadonlyArray<Geofence>): boolean => {
+    let j = 0;
+    let edges = geofence;
+    let numSides = geofence.length;
     let oddNodes = false;
     for(let i = 0; i < numSides; i++) {
         j++;

@@ -1,9 +1,42 @@
-import { useState } from "react";
 import { CalendarList } from "react-native-calendars";
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
+import useTracking from "../tracking/useTracking";
+import RealmContext, { Dates } from  "../../db/PlaceDatabase";
+
+interface StringToMarkingDictionary {
+    [date: string]: Marking;
+}
+interface Marking {
+    marked: boolean,
+    dotColor: string
+}
+
+const { useQuery, useRealm } = RealmContext;
 
 const CalendarTracker = () => {
-    const [datesGone, setDatesGone] = useState({'2023-03-25': {marked: true, dotColor: 'green'}});
+    const dates = useQuery(Dates);
+    const realm = useRealm();
+
+    const saveDate = (date: string) => {
+        console.log(`Saving date ${date}`);
+        realm.write(() => {
+            realm.create('Dates', {
+                _id: new Realm.BSON.ObjectId(),
+                date: date
+            })
+        });
+    }
+
+    useTracking(saveDate);
+
+    const formateDates = (): StringToMarkingDictionary => {
+        let datesWithMark: StringToMarkingDictionary = {};
+        dates.map((date) => {
+            datesWithMark[date.date] = {marked: true, dotColor: 'green'}
+        });
+
+        return datesWithMark
+    }
 
     return (
         <View style={styles.calendarWrapper}>
@@ -18,6 +51,8 @@ const CalendarTracker = () => {
                 scrollEnabled={true}
                 // Enable or disable vertical scroll indicator. Default = false
                 showScrollIndicator={true}
+
+                markedDates = {formateDates()}
             />
         </View>
     )
