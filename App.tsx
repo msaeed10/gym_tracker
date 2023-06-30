@@ -21,7 +21,16 @@ function App(): JSX.Element {
   return (
     <RealmProvider>
       <NavigationContainer>
-        <Tab.Navigator style={styles.container}>
+        <Tab.Navigator screenOptions={() => ({
+                //Tab bar styles can be added here
+                tabBarStyle:{paddingTop: 25,
+                  backgroundColor:'#C0C0C0',
+                  shadowColor: '#000',
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 2,
+                  height:70},
+            })}>
           <Tab.Screen
             name="Calendar"
             component={CalendarTracker}/>
@@ -33,10 +42,6 @@ function App(): JSX.Element {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 0,
-    marginTop: 25
-  },
 });
 
 export default App;

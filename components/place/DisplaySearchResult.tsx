@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     },
     card: {
         height: 100,
-        marginTop: 10,
+        marginTop: 5,
         backgroundColor: '#F9F5F4',
         borderRadius: 5,
         borderColor: '#000',
@@ -45,7 +45,8 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.25,
         shadowRadius: 2,
-        elevation: 2
+        elevation: 2,
+        marginBottom: 5
     },
     content: {
         height: 50

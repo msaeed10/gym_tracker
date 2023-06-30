@@ -96,7 +96,7 @@ const AddRegionForm:React.FC<AddRegionFormProps> = ({savedPlaces, triggerModalOp
                         <Text>Search</Text>
                 </Pressable>
             </View>
-            <View style={styles.result_container}>
+            <View>
                 <DisplaySearchResult 
                     places={searchResults} 
                     handleSelect={handleSelect} 
@@ -145,9 +145,6 @@ const styles = StyleSheet.create({
         height: 30,
         width: '20%',
         backgroundColor: '#FB7878'
-    },
-    result_container: {
-        marginBottom: 140,
     },
     action: {
         backgroundColor: 'white',

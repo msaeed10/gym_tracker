@@ -38,21 +38,23 @@ const useTracking = (saveDate: (date: string) => void) => {
                 latitude: location.latitude, 
                 longitude: location.longitude
             }
-            const closestPlace: Place | undefined = getClosestFence(coordLocation, places);
+            if(places.length > 0) {
+                const closestPlace: Place | undefined = getClosestFence(coordLocation, places);
 
-            if(isWithinPlace(coordLocation, closestPlace!.geofence) && !isInCurrentPlace) {
-                startTime = Date.now();
-                isInCurrentPlace = true;
-            };
+                if(isWithinPlace(coordLocation, closestPlace!.geofence) && !isInCurrentPlace) {
+                    startTime = Date.now();
+                    isInCurrentPlace = true;
+                };
 
-            if(isInCurrentPlace && !isWithinPlace(coordLocation, closestPlace!.geofence)) {
-                totalEstimatedTime = (Date.now() - startTime) / 1000 / 60;
-                if(totalEstimatedTime >= 30) {
-                    let date = new Date().toISOString().split('T')[0];
-                    saveDate(date);                
+                if(isInCurrentPlace && !isWithinPlace(coordLocation, closestPlace!.geofence)) {
+                    totalEstimatedTime = (Date.now() - startTime) / 1000 / 60;
+                    if(totalEstimatedTime >= 30) {
+                        let date = new Date().toISOString().split('T')[0];
+                        saveDate(date);                
+                    }
+                    startTime = 0;
+                    isInCurrentPlace = false;
                 }
-                startTime = 0;
-                isInCurrentPlace = false;
             }
         });
         BackgroundGeolocation.checkStatus(status => {
