@@ -47,8 +47,8 @@ const useTracking = (saveDate: (date: string) => void) => {
                 };
 
                 if(isInCurrentPlace && !isWithinPlace(coordLocation, closestPlace!.geofence)) {
-                    totalEstimatedTime = (Date.now() - startTime) / 1000 / 60;
-                    if(totalEstimatedTime >= 30) {
+                    totalEstimatedTime = (Date.now() - startTime) / 1000;
+                    if(totalEstimatedTime >= 5) {
                         let date = new Date().toISOString().split('T')[0];
                         saveDate(date);                
                     }

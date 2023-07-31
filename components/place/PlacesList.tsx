@@ -1,5 +1,6 @@
 import { View, ScrollView, Text, StyleSheet, Pressable } from 'react-native';
 import CardInformation from '../card/CardInformation';
+import NotFound from './NotFound';
 
 interface RegionListProps {
     places: ReadonlyArray<any>;
@@ -23,13 +24,18 @@ const PlacesList:React.FC<RegionListProps> = ({places, handleRemovePlace}) => {
 
     return(
         <ScrollView contentContainerStyle={styles.card_container}>
-            {generatCards()}
+            {
+                places.length === 0 ?  
+                <NotFound message="No places were found. Please add a place." /> :
+                generatCards()
+            }
         </ScrollView>
     )
 }
 
 const styles = StyleSheet.create({
     card_container: {
+        height: '100%',
         marginTop: 0,
         marginBottom: 0,
         marginLeft: 10,
