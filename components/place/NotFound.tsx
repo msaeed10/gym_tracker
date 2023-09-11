@@ -7,7 +7,7 @@ interface NotFoundProps {
 const NotFound:React.FC<NotFoundProps> = ({message}) => {
     return(
         <View style={styles.message_container}>
-            <Text>{message}</Text>
+            <Text style={styles.message}>{message}</Text>
         </View>
     )
 }
@@ -16,7 +16,11 @@ const styles = StyleSheet.create({
     message_container: {
         height: '80%',
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+    }, 
+    message: {
+        fontStyle: 'italic',
+        color: 'rgba(0,0,0,0.5)'
     }
 });
 
