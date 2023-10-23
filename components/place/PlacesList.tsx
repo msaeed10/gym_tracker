@@ -1,35 +1,61 @@
 import { View, ScrollView, Text, StyleSheet, Pressable } from 'react-native';
 import CardInformation from '../card/CardInformation';
+import NotFound from './NotFound';
+import { useState } from 'react';
+import DeleteModal from './DeleteModal';
 
 interface RegionListProps {
     places: ReadonlyArray<any>;
     handleRemovePlace: (regionId: string) => void;
 }
 
-const PlacesList:React.FC<RegionListProps> = ({places, handleRemovePlace}) => {
+const PlacesList:React.FC<RegionListProps> = ({places, handleRemovePlace}) => {  
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [regionToDelete, setRegionToDelete] = useState("");
+
+    const handleDelete = (doDelete: boolean) => {
+        if(doDelete) {
+            handleRemovePlace(regionToDelete);
+        }
+        setIsModalOpen(!isModalOpen);
+    }
+
+    const onDelete = (placeId: string) => {
+        setRegionToDelete(placeId)
+        setIsModalOpen(true)
+    }
+
     const generatCards = () => {
+    
         return places.map((place, index) => {
             return (
                 <View key={index} style={styles.card}>
                     <CardInformation place={place} />
                     <View style={styles.action}>
                         <Pressable 
-                            onPress={() => {handleRemovePlace(place._id)}} 
+                            onPress={() => {onDelete(place._id)}} 
                             style={[styles.button, styles.delete]}><Text>Delete</Text></Pressable> 
                     </View>
                 </View>
             )});
     }
 
+
     return(
         <ScrollView contentContainerStyle={styles.card_container}>
-            {generatCards()}
+            <DeleteModal handleDelete={handleDelete} isVisible={isModalOpen} />
+            {
+                places.length === 0 ?  
+                <NotFound message="No places were found. Please add a place." /> :
+                generatCards()
+            }
         </ScrollView>
     )
 }
 
 const styles = StyleSheet.create({
     card_container: {
+        height: '100%',
         marginTop: 0,
         marginBottom: 0,
         marginLeft: 10,
@@ -75,9 +101,6 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.25,
         shadowRadius: 2,
         elevation: 2
-    },
-    edit: {
-        backgroundColor: '#8ED3E4'
     },
     delete: {
         backgroundColor: '#FB7878'

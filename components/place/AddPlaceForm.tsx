@@ -7,6 +7,7 @@ import { Place } from '../../db/PlaceDatabase';
 import { CoordsModel } from '../../model/CoordsModel';
 import { SearchResultModel } from '../../model/SearchResultModel';
 import { REACT_APP_PLACES_API, REACT_APP_RADIUS, REACT_APP_TYPE, REACT_APP_PLACES_API_KEY } from "@env";
+import NotFound from './NotFound';
 
 interface AddRegionFormProps {
     triggerModalOpen: () => void;
@@ -97,10 +98,14 @@ const AddRegionForm:React.FC<AddRegionFormProps> = ({savedPlaces, triggerModalOp
                 </Pressable>
             </View>
             <View>
-                <DisplaySearchResult 
-                    places={searchResults} 
-                    handleSelect={handleSelect} 
-                    handleUnselect={handleUnselect} />
+                {
+                    searchResults.length === 0 ? 
+                    <NotFound message="No results were found." /> :
+                    <DisplaySearchResult 
+                        places={searchResults} 
+                        handleSelect={handleSelect} 
+                        handleUnselect={handleUnselect} />
+                }
             </View>
             <View style={styles.action}>
                 <Pressable
@@ -120,7 +125,7 @@ const AddRegionForm:React.FC<AddRegionFormProps> = ({savedPlaces, triggerModalOp
 
 const styles = StyleSheet.create({
     form_container: {
-        height: '100%',
+        height: '100%'
     },
     input_container: {
         backgroundColor: 'white',
@@ -134,12 +139,12 @@ const styles = StyleSheet.create({
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.25,
-        shadowRadius: 2,
+        shadowRadius: 2
     },
     location: {
         justifyContent: 'center',
         maxHeight: 45,
-        width: '70%',
+        width: '70%'
     },
     search: {
         height: 30,
@@ -158,7 +163,7 @@ const styles = StyleSheet.create({
         shadowColor: '#000',
         shadowOffset: { width: 0, height: -2 },
         shadowOpacity: 0.25,
-        shadowRadius: 2,
+        shadowRadius: 2
     },
     button: {
         backgroundColor: '#8ED3E4',
