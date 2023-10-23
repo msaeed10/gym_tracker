@@ -165,6 +165,9 @@ dependencies {
     } else {
         implementation jscFlavor
     }
+
+    // Background geolocation
+    implementation(':@mauron85_react-native-background-geolocation')
 }
 
 apply from: file("../../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesAppBuildGradle(project)

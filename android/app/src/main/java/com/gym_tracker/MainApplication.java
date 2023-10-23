@@ -8,6 +8,7 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint;
 import com.facebook.react.defaults.DefaultReactNativeHost;
 import com.facebook.soloader.SoLoader;
+import com.marianhello.bgloc.react.BackgroundGeolocationPackage;
 import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
@@ -58,5 +59,17 @@ public class MainApplication extends Application implements ReactApplication {
       DefaultNewArchitectureEntryPoint.load();
     }
     ReactNativeFlipper.initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
+  }
+
+  /**
+   * A list of packages used by the app. If the app uses additional views
+   * or modules besides the default ones, add more packages here.
+   */
+  @Override
+  protected List<ReactPackage> getPackages() {
+      return Arrays.<ReactPackage>asList(
+          new MainReactPackage(),
+          new BackgroundGeolocationPackage() // <---- Add the Package
+      );
   }
 }
