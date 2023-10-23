@@ -66,18 +66,24 @@ const styles = StyleSheet.create({
 
     actionsContainer: {
         flexDirection: 'row',
-        justifyContent: 'flex-end',
+        justifyContent: 'space-between',
         margin: 10
     },
 
     button: {
+        width: 50,
+        height: 30,
+        margin: 5,
+        justifyContent: 'center',
+        alignItems: 'center',
         borderRadius: 5,
-        paddingRight: 10,
-        paddingLeft: 10,
-        paddingTop: 5,
-        paddingBottom: 5,
-        elevation: 2,
-        margin: 5
+        borderWidth: 0.2,
+        borderColor: '#000',
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 2,
+        elevation: 2
     },
 
     confirmButton: {
