@@ -1,6 +1,5 @@
 import { StyleSheet, View } from "react-native"
 import { useState } from 'react'
-import "react-native-get-random-values";
 import PlacesList from './PlacesList'
 import AddPlaceButton from './AddPlaceButton'
 import AddPlaceForm from './AddPlaceForm'
